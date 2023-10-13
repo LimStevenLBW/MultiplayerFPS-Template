@@ -6,23 +6,34 @@ using Unity.Netcode;
 public class Player : NetworkBehaviour
 {
     private NetworkVariable<int> team = new NetworkVariable<int>(0);
-    private NetworkVariable<int> health = new NetworkVariable<int>(100);
-    private NetworkVariable<int> armor = new NetworkVariable<int>(0);
+    private NetworkVariable<int> health = new NetworkVariable<int>(
+        100,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+    );
+
+    private NetworkVariable<int> armor = new NetworkVariable<int>(0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+    );
+
+    public PlayerHud hud;
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
+        if (IsOwner)
         {
+            team.OnValueChanged += OnTeamValueChanged;
+            health.OnValueChanged += OnHealthValueChanged;
+            armor.OnValueChanged += OnArmorValueChanged;
 
         }
         else
         {
-           
-           team.OnValueChanged += OnTeamValueChanged;
-           health.OnValueChanged += OnHealthValueChanged;
-           armor.OnValueChanged += OnArmorValueChanged;
-
+            hud.gameObject.SetActive(false);
         }
+
+       // hud = FindFirstObjectByType<PlayerHud>();
     }
 
     void OnTeamValueChanged(int previous, int newValue)
@@ -31,16 +42,16 @@ public class Player : NetworkBehaviour
     }
     void OnHealthValueChanged(int previous, int newValue)
     {
-        Debug.Log(newValue);
+        hud.UpdateHealthText(newValue);
     }
     void OnArmorValueChanged(int previous, int newValue)
     {
 
     }
-
-    public void WasHit(int teamThatSentTheBullet)
+    [ServerRpc(RequireOwnership = false)]
+    public void WasHitServerRPC(int teamThatSentTheBullet)
     {
-        Debug.Log(OwnerClientId + "; received from" + teamThatSentTheBullet);
+        Debug.Log(OwnerClientId + "; received damage from enemy team:" + teamThatSentTheBullet);
         if(team.Value == teamThatSentTheBullet)
         {
             Debug.Log("friendly fire");
@@ -48,10 +59,27 @@ public class Player : NetworkBehaviour
         }
         else
         {
-            Debug.Log("Damaged");
-            health.Value -= 10;
+            ClientRpcParams clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new ulong[] { OwnerClientId }
+                }
+            };
+
+            SendHealthUpdateClientRPC(10, clientRpcParams);
+
+            //Destroy(gameObject);
+            // Can also do GetComponent<NetworkObject>().Despawn(destroy:true);
         }
     }
+
+    [ClientRpc]
+    private void SendHealthUpdateClientRPC(int damage, ClientRpcParams clientRpcParams = default)
+    {
+        health.Value -= damage;
+    }
+    
 
     public int GetTeamNumber()
     {

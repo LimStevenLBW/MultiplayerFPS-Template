@@ -216,7 +216,7 @@ public class FirstPersonController : NetworkBehaviour
         }
         else
         {
-            playerCamera.enabled = false;
+            playerCamera.enabled = false;   
             Destroy(playerCamera.GetComponent<AudioListener>());
         }
     }

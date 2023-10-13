@@ -51,6 +51,12 @@ public class GameManager : NetworkBehaviour
                 playerJoiningTeam2.SetTeamNumber(2);
                 playerJoiningTeam2.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerID);
             }
+            else if (currentNumberOfPlayers == 3)
+            {
+                Player playerJoiningTeam3 = Instantiate(playerPrefab);
+                playerJoiningTeam3.SetTeamNumber(2);
+                playerJoiningTeam3.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerID);
+            }
         }
     }
 

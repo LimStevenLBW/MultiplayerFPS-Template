@@ -13,13 +13,34 @@ public class GunScript : Equip
     public Transform tracerOrigin;
     public Animator animator;
     public Tracer tracer;
-    private int ammo = 30;
-    private int maxAmmo = 30;
+    private const int maxAmmo = 30;
+
+    private NetworkVariable<int> ammo = new NetworkVariable<int>(
+        maxAmmo,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+    );
 
     public FirstPersonController fpsController;
     public Player player;
     public float shotCooldown;
     private float nextShot;
+
+    public AudioSource audioSource;
+    public AudioClip audioGunClip;
+    public PlayerHud hud;
+
+    public override void OnNetworkSpawn()
+    {
+
+        if (IsOwner)
+        {
+            ammo.OnValueChanged += OnAmmoValueChanged;
+
+        }
+
+        //hud = FindFirstObjectByType<PlayerHud>();
+    }
 
 
     public void SetCamera(Camera camera)
@@ -42,6 +63,11 @@ public class GunScript : Equip
         Reload1();
     }
 
+    void OnAmmoValueChanged(int previous, int newValue)
+    {
+        hud.UpdateAmmoText(newValue);
+    }
+
     public void ADS()
     {
         /*
@@ -58,16 +84,15 @@ public class GunScript : Equip
 
     public void Fire()
     {
-
         Vector3 destination;
-        if (Time.time > nextShot && ammo > 0)
+        if (Time.time > nextShot && ammo.Value > 0)
         {
             //StopAllCoroutines();
             nextShot = Time.time + shotCooldown;
 
             bulletSpreadModifier += 0.11f;
 
-            //gunAudio.PlayOneShot(gunshotClip)
+            audioSource.PlayOneShot(audioGunClip);
 
             Vector3 direction = GetDirection();
 
@@ -75,20 +100,17 @@ public class GunScript : Equip
 
             animator.SetTrigger("Shoot");
 
-            ammo -= 1;
+            ammo.Value -= 1;
 
-  
             if (Physics.Raycast(bulletRay, out RaycastHit hit, float.MaxValue))
             {
-
                 destination = hit.point;
 
                 if (hit.collider.gameObject.GetComponent<Player>())
                 {
-                    //
                     Player enemy = hit.collider.gameObject.GetComponent<Player>();
                     int teamNum = player.GetTeamNumber();
-                    enemy.WasHit(teamNum);
+                    enemy.WasHitServerRPC(teamNum);
                 }
             }
             else
@@ -124,7 +146,7 @@ public class GunScript : Equip
     private IEnumerator ReloadCoroutine()
     {
         yield return new WaitForSeconds(2.5f);
-        ammo = maxAmmo;
+        ammo.Value = maxAmmo;
     }
 
     private Vector3 GetDirection()
