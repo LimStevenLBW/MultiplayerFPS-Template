@@ -107,6 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5467078316016754374}
   - component: {fileID: 2390997462221983291}
+  - component: {fileID: 5313730142688234894}
   m_Layer: 0
   m_Name: Viewmodel
   m_TagString: Untagged
@@ -155,6 +156,50 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5313730142688234894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1135738263422358170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList:
+  - Layer: 0
+    OriginatingState: -1073020442
+    DestinationState: 392179374
+    TransitionDuration: 0.25
+    TriggerNameHash: -1316629574
+    TransitionIndex: 2
+  - Layer: 0
+    OriginatingState: -466596548
+    DestinationState: -1073020442
+    TransitionDuration: 0
+    TriggerNameHash: -1316629574
+    TransitionIndex: 0
+  - Layer: 0
+    OriginatingState: -466596548
+    DestinationState: -1525363869
+    TransitionDuration: 0.25
+    TriggerNameHash: -1525363869
+    TransitionIndex: 2
+  - Layer: 0
+    OriginatingState: -1525363869
+    DestinationState: -1073020442
+    TransitionDuration: 0
+    TriggerNameHash: -948338245
+    TransitionIndex: 1
+  - Layer: 0
+    OriginatingState: -395397974
+    DestinationState: 392179374
+    TransitionDuration: 0.000000004616248
+    TriggerNameHash: -1316629574
+    TransitionIndex: 1
+  m_Animator: {fileID: 2390997462221983291}
 --- !u!1 &1986981518521219381
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,6 +433,7 @@ MonoBehaviour:
   animator: {fileID: 2390997462221983291}
   tracer: {fileID: 2413030873159129501, guid: ecd4f03c75052f742a64ab9298e46913, type: 3}
   fpsController: {fileID: 8176563813478569898}
+  player: {fileID: 3027540548071547475}
   shotCooldown: 0.1
 --- !u!1 &2640268541423938622
 GameObject:
@@ -867,6 +913,7 @@ GameObject:
   - component: {fileID: 1140007416681195534}
   - component: {fileID: 4619584945034237398}
   - component: {fileID: 3835529269510590653}
+  - component: {fileID: 4144723310007588918}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -944,6 +991,32 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5337425454997031348}
   m_Enabled: 1
+--- !u!114 &4144723310007588918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5337425454997031348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ce7c9eef08316644b3a4fda999f4143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 1
 --- !u!1 &5340997824188844202
 GameObject:
   m_ObjectHideFlags: 0

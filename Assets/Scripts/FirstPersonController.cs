@@ -217,6 +217,7 @@ public class FirstPersonController : NetworkBehaviour
         else
         {
             playerCamera.enabled = false;
+            Destroy(playerCamera.GetComponent<AudioListener>());
         }
     }
 
@@ -243,7 +244,7 @@ public class FirstPersonController : NetworkBehaviour
         for (int i = 0; i < 180; i++)
         {
             joint.Rotate(rollDirection);
-            playerCamera.transform.parent.parent.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * 100);
+            playerCamera.transform.parent.parent.gameObject.GetComponent<Rigidbody>().AddForce(forceDirection * 50);
             yield return null;
             
         }

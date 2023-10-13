@@ -12,7 +12,6 @@ public class NetworkButtons : MonoBehaviour
 
     public void StartHost()
     {
-        Debug.Log("Test");
         NetworkManager.Singleton.StartHost();
     }
 

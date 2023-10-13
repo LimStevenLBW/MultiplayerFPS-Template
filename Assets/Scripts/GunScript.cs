@@ -17,6 +17,7 @@ public class GunScript : Equip
     private int maxAmmo = 30;
 
     public FirstPersonController fpsController;
+    public Player player;
     public float shotCooldown;
     private float nextShot;
 
@@ -76,14 +77,18 @@ public class GunScript : Equip
 
             ammo -= 1;
 
+  
             if (Physics.Raycast(bulletRay, out RaycastHit hit, float.MaxValue))
             {
-                destination = hit.point;
-                Debug.Log(hit.transform.gameObject);
 
-                if (hit.collider.gameObject.GetComponent<Target>())
+                destination = hit.point;
+
+                if (hit.collider.gameObject.GetComponent<Player>())
                 {
-                    Debug.Log("oof");
+                    //
+                    Player enemy = hit.collider.gameObject.GetComponent<Player>();
+                    int teamNum = player.GetTeamNumber();
+                    enemy.WasHit(teamNum);
                 }
             }
             else
